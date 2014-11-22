@@ -1,0 +1,26 @@
+{
+  "name": "Nerd Bot",
+  "version": "0.1.0",
+  "description": "hah! Neeerds....",
+  "main": "app.js",
+  "moduleType": [
+    "node"
+  ],
+  "authors": [
+    "Jared Prather"
+  ],
+  "license": "MIT",
+  "homepage": "http://jaredprather.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "hello": "~1.3.2",
+    "handlebars": "~2.0.0"
+  }
+}
