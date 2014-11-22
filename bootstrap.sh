@@ -75,7 +75,7 @@ npm install 2> /dev/null
 apt-get -y install git 2> /dev/null
 
 # install bunyan
-npm install -g bunyan 2> /dev/null
+#npm install -g bunyan 2> /dev/null
 
 # install bower
 npm install -g bower 2> /dev/null

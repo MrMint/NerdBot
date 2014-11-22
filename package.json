@@ -26,7 +26,6 @@
   "dependencies": {
     "ac-koa": "^0.2.6",
     "ac-koa-hipchat": "^0.2.14",
-    "bunyan":"^1.0.0",
-    
+    "bunyan":"^1.0.0"
   }
 }

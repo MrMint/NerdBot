@@ -5,12 +5,27 @@ var app = ack(pkg);
 
 // Nerd Bot dependencies
 var bunyan = require('bunyan');
-var router = require('controllers/nerdRouter.js');
+var handlers = require('./services/handlers.js');
 
-// Controllers
-var card = require('controllers/card.js');
-var help = require('controllers/help.js');
-var trade = require('controllers/trade.js');
+// Handlers
+var card = require('./handlers/card/card.js');
+var trade = require('./handlers/card/trade.js');
+var help = require('./handlers/help.js');
+
+// Setup logging
+var log = bunyan.createLogger({
+	name: 'nerd-bot',
+	streams: [{
+	  	type: 'rotating-file',
+	  	level: 'debug',
+	    path: '/home/vagrant/project/log/nerdBot.log',  // log ERROR and above to a file
+	   	count: 30,
+	    period: '1d'
+	}]
+});
+
+log.info("Starting up.");
+log.info("Setting up koa app and hipchat permissions.");
 
 // Setup the app, request needed permissions
 var addon = app.addon()
@@ -18,46 +33,39 @@ var addon = app.addon()
   .allowRoom(true)
   .scopes('send_notification');
 
-// Setup logging
-var log = bunyan.createLogger({
-	name: 'nerd-bot',
-	  streams: [
-	    {
-	   		type: 'rotating-file',
-	      	level: 'debug',
-	      	path: '/home/vagrant/project/log/nerdBot.log',  // log ERROR and above to a file
-	    	count: 30,
-	    	period: '1d'
-	    }
-	  ]
-	});
+log.info("Registering the handlers.");
 
-// TODO
- router.addRoute('default', help.commands);
-// router.addRoute('card', card.info);
-// router.addRoute('value', card.value);
-// router.addRoute('trade', trade.tradeStats);
+// Register the handlers
+var magicHandlers = new handlers(log);
+magicHandlers.add(card);
+magicHandlers.add(trade);
+magicHandlers.add(help);
 
+log.info("Registering the handlers.");
 
 // Setup the key used by hipchat
 if (process.env.DEV_KEY) {
   addon.key(process.env.DEV_KEY);
 }
  
+log.info("Defining the webhooks to be used by hipchat.");
+
  // Define the webhooks
 addon.onWebhook('install', function *() {
-	logger.info(this.room);
   	yield this.roomClient.sendNotification('Hey Nerds!');
 });
 
 addon.onWebhook('uninstall', function *() {
-	logger.info(this.room);
   	yield this.roomClient.sendNotification('WHY U UNINSTALL?');
 });
 
-addon.webhook('room_message', /^\/nerd /, function *() {
-	logger.debug(this.content);
-	yield this.roomClient.sendNotification('Hi, ' + this.sender.name + '.... Nerd!');
+addon.webhook('room_message', /^\/magic /, function *() {
+	log.debug(this.content);
+	yield this.roomClient.sendNotification(magicHandlers.handle(this.content));
 });
 
+log.info("Starting the koa app.");
+
 app.listen();
+
+log.info("Start up successfull!");
