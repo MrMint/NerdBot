@@ -1,11 +1,11 @@
-function Handlers(log) {
+function HandlerService(log) {
     // The registered handlers
     this.handlers = {};
     this.log = log;
 }
 
 // Registers a new route
-Handlers.prototype.add = function(handler) {
+HandlerService.prototype.add = function(handler) {
     // Ensure we have not already added an handler for this command
     if (!this.handlers[handler.handles]) {
         this.log.info("Registered handler for command: " + handler.handles);
@@ -14,7 +14,7 @@ Handlers.prototype.add = function(handler) {
 };
 
 // Handles routing a request to the appropriate command handler
-Handlers.prototype.handle = function(request) {
+HandlerService.prototype.handle = function(request) {
     var words = request.split(' ');
     command = words[1];
     // Route the command
@@ -28,8 +28,8 @@ Handlers.prototype.handle = function(request) {
     }
 };
 
-Handlers.prototype.getHandlers = function() {
+HandlerService.prototype.getHandlers = function() {
     return this.handlers;
 };
 
-module.exports = Handlers;
+module.exports = HandlerService;

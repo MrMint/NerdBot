@@ -5,16 +5,15 @@ var app = ack(pkg);
 
 // Nerd Bot dependencies
 var bunyan = require('bunyan');
-var handlers = require('./services/handlers.js');
+var HandlerService = require('./services/handlerService.js');
 
 // Handlers
-var Card = require('./commands/magic/card.js');
-var Trade = require('./commands/magic/trade.js');
-var Help = require('./commands/magic/help.js');
+var Card = require('./handlers/magic/card.js');
+var Trade = require('./handlers/magic/trade.js');
+var Help = require('./handlers/magic/help.js');
 
-// Handlerbars
+// Handlebars
 require('./templates/helpers/helpers.js');
-//require('./templates/helpers/list.js')();
 
 // Setup logging
 var log = bunyan.createLogger({
@@ -40,7 +39,7 @@ var addon = app.addon()
 log.info("Registering the handlers.");
 
 // Register the handlers
-var magicHandlers = new handlers(log);
+var magicHandlers = new HandlerService(log);
 magicHandlers.add(new Card());
 magicHandlers.add(new Trade());
 magicHandlers.add(new Help(magicHandlers, log));

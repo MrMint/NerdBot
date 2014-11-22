@@ -1,1 +1,1 @@
-require('./templates/helpers/list.js')();
+require('./list.js')();
