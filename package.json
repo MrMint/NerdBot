@@ -1,0 +1,30 @@
+{
+  "name": "nerd-bot",
+  "displayName": "Nerd Bot",
+  "description": "Hah Nerds...",
+  "version": "0.1.0",
+  "author": {
+    "name": "Jared Prather",
+    "url": "http://jaredprather.com"
+  },
+  "license": "Apache 2.0",
+  "engines": {
+    "node": "~0.11.13"
+  },
+  "scripts": {
+    "web": "node --harmony app.js",
+    "web-dev": "nodemon --harmony -e js,json,css,hbs, app.js"
+  },
+  "development": {
+    "port": 3000
+  },
+  "production": {
+    "localBaseUrl": "https://my-addon.anypaas.com",
+    "redisEnv": "REDISCLOUD_URL",
+    "port": "$PORT"
+  },
+  "dependencies": {
+    "ac-koa": "^0.2.6",
+    "ac-koa-hipchat": "^0.2.14"
+  }
+}
