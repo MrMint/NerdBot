@@ -13,8 +13,8 @@ var Trade = require('./commands/magic/trade.js');
 var Help = require('./commands/magic/help.js');
 
 // Handlerbars
-// require('./templates/helpers/helpers.js');
-require('./templates/helpers/list.js')();
+require('./templates/helpers/helpers.js');
+//require('./templates/helpers/list.js')();
 
 // Setup logging
 var log = bunyan.createLogger({

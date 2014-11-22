@@ -1,2 +1,1 @@
-var list = require('./templates/helpers/list.js');
-list();
+require('./templates/helpers/list.js')();
