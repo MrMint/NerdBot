@@ -33,7 +33,7 @@ var log = bunyan.createLogger({
 	});
 
 // TODO
-// router.addRoute('default', help.commands);
+ router.addRoute('default', help.commands);
 // router.addRoute('card', card.info);
 // router.addRoute('value', card.value);
 // router.addRoute('trade', trade.tradeStats);
