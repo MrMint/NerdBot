@@ -71,5 +71,11 @@ su - vagrant
 cd /home/vagrant/project
 npm install 2> /dev/null
 
+# install git
+apt-get -y install git 2> /dev/null
+
 # install bunyan
 npm install -g bunyan 2> /dev/null
+
+# install bower
+npm install -g bower 2> /dev/null
