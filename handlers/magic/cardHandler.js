@@ -16,7 +16,8 @@ CardHandler.prototype.handle = function * (request) {
     var card = yield this.cardService.getCardByNameAsync(request.substring(words[0].length + words[1].length + 2));
 
     var source = {
-        cardImageLink: card.imgUrl
+        cardImageLink: card.imgUrl,
+        cardStoreLink: card.storeUrl
     };
     var pageBuilder = handlebars.compile(this.template);
     return pageBuilder(source);

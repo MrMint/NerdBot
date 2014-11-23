@@ -14,6 +14,7 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
 	this.log.debug('Making request for card with name: ' + cardName);
     return this.rest(this.apiUrl + 'cards?name=' + cardName)
         .then(function(response) {
+        	// Todo also bad, fix it
         	var data = response.entity[0];
         	log.debug(data);
         	var setData = data.editions[0];
@@ -24,7 +25,8 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
                 setData['rarity'],
                 setData['set'],
                 setData['price']['average'],
-                setData['image_url']);
+                setData['image_url'],
+                setData['store_url']);
         });
 };
 
