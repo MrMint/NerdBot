@@ -14,17 +14,17 @@ HandlerService.prototype.add = function(handler) {
 };
 
 // Handles routing a request to the appropriate command handler
-HandlerService.prototype.handle = function(request) {
+HandlerService.prototype.handle = function* (request) {
     var words = request.split(' ');
     command = words[1];
     // Route the command
     // Check if we have a handler registered for the command
     if ( !! this.handlers[command]) {
-        return this.handlers[command].handle(command);
+        return yield this.handlers[command].handle(request);
     } else {
         this.log.warn("No handler registered for command: " + command);
         // Todo make this not suck
-        return this.handlers['help'].handle(command);
+        return yield this.handlers['help'].handle(request);
     }
 };
 

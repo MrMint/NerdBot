@@ -6,11 +6,12 @@ var app = ack(pkg);
 // Nerd Bot dependencies
 var bunyan = require('bunyan');
 var HandlerService = require('./services/handlerService.js');
+var CardService = require('./services/cardService.js');
 
 // Handlers
-var Card = require('./handlers/magic/card.js');
-var Trade = require('./handlers/magic/trade.js');
-var Help = require('./handlers/magic/help.js');
+var CardHandler = require('./handlers/magic/cardHandler.js');
+var TradeHandler = require('./handlers/magic/tradeHandler.js');
+var HelpHandler = require('./handlers/magic/helpHandler.js');
 
 // Handlebars
 require('./templates/helpers/helpers.js');
@@ -21,7 +22,7 @@ var log = bunyan.createLogger({
     streams: [{
         type: 'rotating-file',
         level: 'debug',
-        path: '/home/vagrant/project/log/nerdBot.log', // log ERROR and above to a file
+        path: '/home/vagrant/project/log/nerdBot.log',
         count: 30,
         period: '1d'
     }]
@@ -40,9 +41,9 @@ log.info("Registering the handlers.");
 
 // Register the handlers
 var magicHandlers = new HandlerService(log);
-magicHandlers.add(new Card());
-magicHandlers.add(new Trade());
-magicHandlers.add(new Help(magicHandlers, log));
+magicHandlers.add(new CardHandler(new CardService('https://api.deckbrew.com/mtg/', log), log));
+magicHandlers.add(new TradeHandler());
+magicHandlers.add(new HelpHandler(magicHandlers, log));
 
 log.info("Registering the handlers.");
 
@@ -64,7 +65,10 @@ addon.onWebhook('uninstall', function * () {
 
 addon.webhook('room_message', /^\/magic /, function * () {
     log.debug(this.content);
-    yield this.roomClient.sendNotification(magicHandlers.handle(this.content));
+
+    var result = yield magicHandlers.handle(this.content);
+    log.debug(result);
+    yield this.roomClient.sendNotification(result);
 });
 
 log.info("Starting the koa app.");

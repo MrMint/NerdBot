@@ -28,6 +28,6 @@
         "ac-koa-hipchat": "^0.2.14",
         "bunyan": "^1.0.0",
         "handlebars": "^2.0.0",
-        "restler": "^3.1.0"
+        "rest":"^1.2.0"
     }
 }

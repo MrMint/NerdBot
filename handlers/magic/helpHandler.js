@@ -1,18 +1,18 @@
 var fs = require('fs');
 var handlebars = require("handlebars");
 
-function Help(handlers, log) {
+function HelpHandler(handlerService, log) {
     this.template = fs.readFileSync("./templates/magic/help.hbs", "utf8");
     this.handles = "help";
     this.description = "Lists all of the available commands.";
-    this.handlers = handlers;
+    this.handlerService = handlerService;
     this.log = log;
 };
 
-Help.prototype.handle = function(command) {
+HelpHandler.prototype.handle = function (command) {
     var source = {};
     var commands = [];
-    var handlers = this.handlers.getHandlers()
+    var handlers = this.handlerService.getHandlers()
     for (var key in handlers) {
         var handlerViewModel = {};
         // Todo this is bad fix it
@@ -25,4 +25,4 @@ Help.prototype.handle = function(command) {
     return pageBuilder(source);
 };
 
-module.exports = Help;
+module.exports = HelpHandler;
