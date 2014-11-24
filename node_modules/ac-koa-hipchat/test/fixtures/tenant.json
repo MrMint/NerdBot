@@ -1,0 +1,14 @@
+{
+  "id": "1234-5678-9876-5432",
+  "secret": "a1b2c3d4e5f6",
+  "group": 1234,
+  "room": 9876,
+  "webhookToken": "3632aafe93452c1e3a7ce1eccdf266003869bf81",
+  "links": {
+    "capabilities": "https://mock.hipchat.com/v2/capabilities",
+    "base": "https://mock.hipchat.com",
+    "api": "https://mock.hipchat.com/v2",
+    "token": "https://mock.hipchat.com/v2/oauth/token"
+  },
+  "enabled": true
+}

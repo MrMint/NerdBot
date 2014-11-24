@@ -1,0 +1,25 @@
+{
+  "key": "test",
+  "name": "Test Name",
+  "description": "Test description",
+  "version": "0.1.0",
+  "vendor": {
+    "name": "Atlassian",
+    "url": "http://atlassian.com"
+  },
+  "links": {
+    "self": "http://{{hostname}}:4000/hipchat/addon/capabilities",
+    "homepage": "http://{{hostname}}:4000/hipchat/"
+  },
+  "capabilities": {
+    "hipchatApiConsumer": {
+      "scopes": ["send_notification"]
+    },
+    "installable": {
+      "allowRoom": true,
+      "allowGlobal": false,
+      "callbackUrl": "http://{{hostname}}:4000/hipchat/addon/installable"
+    },
+    "webhook": []
+  }
+}

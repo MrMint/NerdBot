@@ -1,0 +1,20 @@
+{
+  "name": "test",
+  "displayName": "Test Name",
+  "description": "Test description",
+  "version": "0.1.0",
+  "author": {
+    "name": "Atlassian",
+    "url": "http://atlassian.com"
+  },
+  "development": {
+    "port": 3000
+  },
+  "test": {
+    "port": 4000
+  },
+  "production": {
+    "localBaseUrl": "https://atlassian-ack.herokuapp.com",
+    "redisEnv": "OPENREDIS_URL"
+  }
+}
