@@ -12,20 +12,14 @@ var CardService = require('./services/cardService.js');
 var CardHandler = require('./handlers/magic/cardHandler.js');
 var TradeHandler = require('./handlers/magic/tradeHandler.js');
 var HelpHandler = require('./handlers/magic/helpHandler.js');
+var ErrorHandler = require('./handlers/magic/helpHandler.js');
 
 // Handlebars
 require('./templates/helpers/helpers.js');
 
 // Setup logging
 var log = bunyan.createLogger({
-    name: 'nerd-bot',
-    streams: [{
-        type: 'rotating-file',
-        level: 'debug',
-        path: '/home/vagrant/project/log/nerdBot.log',
-        count: 30,
-        period: '1d'
-    }]
+    name: 'nerd-bot'
 });
 
 log.info("Starting up.");
@@ -42,10 +36,8 @@ log.info("Registering the handlers.");
 // Register the handlers
 var magicHandlers = new HandlerService(log);
 magicHandlers.add(new CardHandler(new CardService('https://api.deckbrew.com/mtg/', log), log));
-magicHandlers.add(new TradeHandler());
+//magicHandlers.add(new TradeHandler());
 magicHandlers.add(new HelpHandler(magicHandlers, log));
-
-log.info("Registering the handlers.");
 
 // Setup the key used by hipchat
 if (process.env.DEV_KEY) {
@@ -64,11 +56,14 @@ addon.onWebhook('uninstall', function * () {
 });
 
 addon.webhook('room_message', /^\/magic /, function * () {
-    log.debug(this.content);
+    try{
+        var result = yield magicHandlers.handle(this.content);
+        yield this.roomClient.sendNotification(result);
+    }catch (e){
+        var errorHandler = new ErrorHandler();
+        yield this.roomClient.sendNotification(errorHandler.handle(this.sender.name));
+    }
 
-    var result = yield magicHandlers.handle(this.content);
-    log.debug(result);
-    yield this.roomClient.sendNotification(result);
 });
 
 log.info("Starting the koa app.");

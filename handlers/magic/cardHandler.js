@@ -2,7 +2,7 @@ var fs = require('fs');
 var handlebars = require("handlebars");
 
 function CardHandler(cardService, log) {
-    this.template = fs.readFileSync("./templates/magic/card.hbs", "utf8");
+    this.pageBuilder = handlebars.compile(fs.readFileSync("./templates/magic/card.hbs", "utf8"));
     this.handles = "card";
     this.description = "Displays the image for a card.";
     this.cardService = cardService;
@@ -19,8 +19,7 @@ CardHandler.prototype.handle = function * (request) {
         cardImageLink: card.imgUrl,
         cardStoreLink: card.storeUrl
     };
-    var pageBuilder = handlebars.compile(this.template);
-    return pageBuilder(source);
+    return this.pageBuilder(source);
 };
 
 module.exports = CardHandler;

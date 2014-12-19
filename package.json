@@ -19,8 +19,9 @@
         "port": 3000
     },
     "production": {
-        "localBaseUrl": "https://my-addon.anypaas.com",
+        "localBaseUrl": "https://mint-nerdbot.herokuapp.com",
         "redisEnv": "REDISCLOUD_URL",
+        "mongoEnv": "MONGOLAB_URI",
         "port": "$PORT"
     },
     "dependencies": {

@@ -2,17 +2,20 @@ var fs = require('fs');
 var handlebars = require("handlebars");
 
 function HelpHandler(handlerService, log) {
-    this.template = fs.readFileSync("./templates/magic/help.hbs", "utf8");
+    this.pageBuilder = handlebars.compile(fs.readFileSync("./templates/magic/help.hbs", "utf8"));
     this.handles = "help";
     this.description = "Lists all of the available commands.";
     this.handlerService = handlerService;
     this.log = log;
 };
 
-HelpHandler.prototype.handle = function (command) {
+HelpHandler.prototype.handle = function * (command) {
     var source = {};
     var commands = [];
-    var handlers = this.handlerService.getHandlers()
+
+    if (this.handlerService) {
+        var handlers = this.handlerService.getHandlers();
+    }
     for (var key in handlers) {
         var handlerViewModel = {};
         // Todo this is bad fix it
@@ -20,9 +23,10 @@ HelpHandler.prototype.handle = function (command) {
         handlerViewModel['description'] = handlers[key].description;
         commands.push(handlerViewModel);
     }
-    source['commands'] = commands;
-    var pageBuilder = handlebars.compile(this.template);
-    return pageBuilder(source);
+    var source = {
+        commands: commands
+    };
+    return this.pageBuilder(source);
 };
 
 module.exports = HelpHandler;
