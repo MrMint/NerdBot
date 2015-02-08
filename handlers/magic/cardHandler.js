@@ -17,7 +17,8 @@ CardHandler.prototype.handle = function * (request) {
 
     var source = {
         cardImageLink: card.imgUrl,
-        cardStoreLink: card.storeUrl
+        cardStoreLink: card.storeUrl,
+        additionalSearchMatches: card.additionalSearchMatches
     };
     return this.pageBuilder(source);
 };
