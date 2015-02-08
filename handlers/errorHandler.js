@@ -7,10 +7,11 @@ function ErrorHandler() {
     this.description = "You dun goofed.";
 };
 
-TradeHandler.prototype.handle = function(userName) {
+ErrorHandler.prototype.handle = function * (userName) {
     var source = {
-        name: userName
+        name: userName.split(' ')[0]
     };
+    
     return this.pageBuilder(source);
 };
 
