@@ -35,7 +35,7 @@ Fork the repo and create pull requests!
   * Link to API being used for MTG cards: [https://deckbrew.com/api/](https://deckbrew.com/api/)
   * If you want your node server to reload updated files you'll need to install nodemon, which is not part of the basic node install. You can install it with npm (npm install -g nodemon).
   * Don't forget to set your own development URL in the package.config:
-    * ```json
+    ```
     "development": {
       "localBaseUrl" : "https://xxxxxxxx.ngrok.com",
       "port": 3000
