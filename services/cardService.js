@@ -26,13 +26,20 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
             var card = _und.find(cards, function(icard) {
                 return icard.name.toLowerCase() == cardName.toLowerCase();
             });
+
+
             if(card == undefined || card.length == 0) {
                 card = cards[0];
             }
-            console.log(card); 
+
+            var additionalSearchMatches = _und.without(cards, card)
 
         	log.debug(card);
-        	var setData = card.editions[0];
+
+            var cardEditions = _und.sortBy(card.editions, function(edition) {
+                return -edition.multiverse_id;
+            });
+        	var setData = cardEditions[0];
             return new CardModel(card.name,
                 card.type,
                 card.color,
@@ -41,7 +48,8 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
                 setData['set'],
                 setData['price']['average'],
                 setData['image_url'],
-                setData['store_url']);
+                setData['store_url'],
+                additionalSearchMatches);
         });
 };
 

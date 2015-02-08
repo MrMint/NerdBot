@@ -1,1 +1,19 @@
-<a href='{{cardStoreLink}}'><img src='{{cardImageLink}}' height='300px'/></a>
+<table>
+    <tr>
+        <td>
+            <a href="{{cardStoreLink}}"><img src="{{cardImageLink}}" height="300px"/></a>
+        </td>
+        {{#if additionalSearchMatches}}
+        <td valign="top">
+            <p>Additional Search Matches:
+            <ul>
+            {{#each additionalSearchMatches}}
+                <li>
+                    <a href="{{store_url}}">{{name}}</a>
+                </li>
+            {{/each}}
+        </ul>
+        </td>
+        {{/if}}
+    </tr>
+</table>
