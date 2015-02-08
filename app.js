@@ -40,8 +40,8 @@ magicHandlers.add(new CardHandler(new CardService('https://api.deckbrew.com/mtg/
 magicHandlers.add(new HelpHandler(magicHandlers, log));
 
 // Setup the key used by hipchat
-if (process.env.DEV_KEY) {
-    addon.key(process.env.DEV_KEY);
+if (process.env.NERDBOT_KEY) {
+    addon.key(process.env.NERDBOT_KEY);
 }
 
 log.info("Defining the webhooks to be used by hipchat.");
