@@ -9,7 +9,7 @@ function ErrorHandler() {
 
 ErrorHandler.prototype.handle = function * (userName) {
     var source = {
-        name: userName.split(' ')[0];
+        name: userName.split(' ')[0]
     };
     
     return this.pageBuilder(source);
