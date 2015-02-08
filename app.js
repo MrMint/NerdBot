@@ -10,6 +10,7 @@ var CardService = require('./services/cardService.js');
 
 // Handlers
 var CardHandler = require('./handlers/magic/cardHandler.js');
+var RandomHandler = require('./handlers/magic/randomHandler.js');
 var HelpHandler = require('./handlers/magic/helpHandler.js');
 var ErrorHandler = require('./handlers/errorHandler.js');
 
@@ -35,13 +36,14 @@ log.info("Registering the handlers.");
 // Register the handlers
 var magicHandlers = new HandlerService(log);
 magicHandlers.add(new CardHandler(new CardService('https://api.deckbrew.com/mtg/', log), log));
+magicHandlers.add(new RandomHandler(new CardService('https://api.deckbrew.com/mtg/', log), log));
 magicHandlers.add(new HelpHandler(magicHandlers, log));
 
 // Setup the key used by hipchat
 if (process.env.NERDBOT_KEY) {
     addon.key(process.env.NERDBOT_KEY);
 }
-
+ 
 log.info("Defining the webhooks to be used by hipchat.");
 
 // Define the webhooks

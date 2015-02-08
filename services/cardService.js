@@ -3,6 +3,10 @@ var mime = require('rest/interceptor/mime');
 var CardModel = require('../models/magic/cardModel.js');
 var client = rest.wrap(mime);
 
+function randomInt(low, high) {
+    return Math.floor(Math.random() * (high - low) + low);
+}
+
 function CardService(apiUrl, log) {
     this.log = log;
     this.rest = client;
@@ -18,6 +22,41 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
         	var data = response.entity[0];
         	log.debug(data);
         	var setData = data.editions[0];
+            return new CardModel(data.name,
+                data.type,
+                data.color,
+                data.text,
+                setData['rarity'],
+                setData['set'],
+                setData['price']['average'],
+                setData['image_url'],
+                setData['store_url']);
+        });
+};
+
+CardService.prototype.getRandomCard = function(filter) {
+    var log = this.log;
+    this.log.debug('Making request for a random card with filter: ' + filter);
+    
+    var minPage = 0;
+    var maxPage = 149;
+    var randomPage = randomInt(minPage, maxPage);
+
+    var query = "?page=" + randomPage;
+    if (filter && filter.indexOf("=") > -1) {
+        query = '?' + filter;
+    }
+
+    return this.rest(this.apiUrl + 'cards' + query)
+        .then(function(response) {
+            var allCards = response.entity;
+            var low = 0;
+            var high = allCards.length;
+            var randomNumber = randomInt(low, high);
+            // Todo also bad, fix it
+            var data = allCards[randomNumber];
+            log.debug(data);
+            var setData = data.editions[0];
             return new CardModel(data.name,
                 data.type,
                 data.color,
