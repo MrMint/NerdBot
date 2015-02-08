@@ -18,10 +18,17 @@ HandlerService.prototype.handle = function * (request) {
     try {
         var words = request.split(' ');
         command = words[1];
+        
         // Route the command
         // Check if we have a handler registered for the command
         if ( !! this.handlers[command]) {
-            return yield this.handlers[command].handle(request);
+            var response = yield this.handlers[command].handle(request);
+
+            if (response == null || response == undefined || response == ''){
+                throw "HandlerOutputException";
+            }
+                
+            return response;
         } else {
             this.log.warn("No handler registered for command: " + command);
             // Todo make this not suck
