@@ -1,4 +1,5 @@
 var rest = require('rest');
+var _und = require('underscore');
 var mime = require('rest/interceptor/mime');
 var CardModel = require('../models/magic/cardModel.js');
 var client = rest.wrap(mime);
@@ -19,13 +20,23 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
     return this.rest(this.apiUrl + 'cards?name=' + cardName)
         .then(function(response) {
         	// Todo also bad, fix it
-        	var data = response.entity[0];
-        	log.debug(data);
-        	var setData = data.editions[0];
-            return new CardModel(data.name,
-                data.type,
-                data.color,
-                data.text,
+        	var cards = response.entity;
+
+            // try to find exact match
+            var card = _und.find(cards, function(icard) {
+                return icard.name.toLowerCase() == cardName.toLowerCase();
+            });
+            if(card == undefined || card.length == 0) {
+                card = cards[0];
+            }
+            console.log(card); 
+
+        	log.debug(card);
+        	var setData = card.editions[0];
+            return new CardModel(card.name,
+                card.type,
+                card.color,
+                card.text,
                 setData['rarity'],
                 setData['set'],
                 setData['price']['average'],
