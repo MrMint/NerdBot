@@ -1,4 +1,4 @@
-function CardModel(name, type, color, text, rarity, set, avgPrice, imgUrl, storeUrl, additionalSearchMatches) {
+function CardModel(name, type, color, text, rarity, set, avgPrice, imgUrl, storeUrl, hasImage, additionalSearchMatches, editions, additionalMatchNumber, exactMatch) {
     this.name = name;
     this.type = type;
     this.color = color;
@@ -8,7 +8,11 @@ function CardModel(name, type, color, text, rarity, set, avgPrice, imgUrl, store
     this.avgPrice = avgPrice;
     this.imgUrl = imgUrl;
     this.storeUrl = storeUrl;
+    this.hasImage = hasImage;
     this.additionalSearchMatches = additionalSearchMatches;
+    this.editions = editions;
+    this.additionalMatchNumber = additionalMatchNumber
+    this.exactMatch = exactMatch;
 }
 
 module.exports = CardModel;

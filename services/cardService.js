@@ -24,7 +24,7 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
 
             // try to find exact match
             var card = _und.find(cards, function(icard) {
-                return icard.name.toLowerCase() == cardName.toLowerCase();
+                return icard.name.trim().toLowerCase() == cardName.trim().toLowerCase();
             });
 
 
@@ -32,24 +32,36 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
                 card = cards[0];
             }
 
-            var additionalSearchMatches = _und.without(cards, card)
-
+            var additionalSearchMatches = _und.chain(cards).without(card).first(50).value();
+            var additionalMatchNumber = (cards.length - 51);
+            additionalMatchNumber = additionalMatchNumber > 0 ? additionalMatchNumber : undefined;
+            var exactMatch = additionalSearchMatches.length == 0;
         	log.debug(card);
 
             var cardEditions = _und.sortBy(card.editions, function(edition) {
                 return -edition.multiverse_id;
             });
-        	var setData = cardEditions[0];
+
+        	var setData = cardEditions.shift();
+            var hasImage = setData.multiverse_id != 0;
+
+            var additionalEditions = _und.each(cardEditions, function(edition) {
+                edition.hasImage = edition.multiverse_id != 0;
+            });
             return new CardModel(card.name,
-                card.type,
-                card.color,
+                card.types,
+                card.colors,
                 card.text,
                 setData['rarity'],
                 setData['set'],
                 setData['price']['average'],
                 setData['image_url'],
                 setData['store_url'],
-                additionalSearchMatches);
+                hasImage,
+                additionalSearchMatches, 
+                additionalEditions,
+                additionalMatchNumber,
+                exactMatch);
         });
 };
 

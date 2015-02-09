@@ -1,19 +1,39 @@
 <table>
     <tr>
         <td>
-            <a href="{{cardStoreLink}}"><img src="{{cardImageLink}}" height="300px"/></a>
+            {{#if cardHasImage}}
+                <a href="{{cardStoreLink}}"><img src="{{cardImageLink}}" height="300px"/></a>
+            {{else}}
+                <p><b>Name:</b> <a href="{{cardStoreLink}}">{{cardName}}</a>
+                <p><b>Type:</b> {{cardType}}
+                <p><b>Color:</b> {{cardColor}}
+                <p><b>Text:</b> {{cardText}}
+            {{/if}}
         </td>
-        {{#if additionalSearchMatches}}
         <td valign="top">
-            <p>Additional Search Matches:
-            <ul>
-            {{#each additionalSearchMatches}}
+            {{#if additionalSearchMatches}}
+                <p>Additional Search Matches:
+                <ul>
+                {{#each additionalSearchMatches}}
                 <li>
                     <a href="{{store_url}}">{{name}}</a>
                 </li>
-            {{/each}}
-        </ul>
+                {{/each}}
+                {{#if additionalMatchNumber}}
+                <li>{{additionalMatchNumber}} more...</li>
+                {{/if}}
+                </ul>
+            {{/if}}
+            {{#if exactMatch}}
+                {{#each editions}}
+                    <!--{{set}}-->
+                    {{#if hasImage}}
+                    <span><a href="{{store_url}}"><img src="{{image_url}}" height="200px"/></a></span>
+                    {{else}}
+                    <!-- <span>NO IMAGE</span> -->
+                    {{/if}}
+                {{/each}}
+            {{/if}}
         </td>
-        {{/if}}
     </tr>
 </table>
