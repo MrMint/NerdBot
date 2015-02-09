@@ -18,7 +18,15 @@ CardHandler.prototype.handle = function * (request) {
     var source = {
         cardImageLink: card.imgUrl,
         cardStoreLink: card.storeUrl,
-        additionalSearchMatches: card.additionalSearchMatches
+        cardName: card.name,
+        cardText: card.text,
+        cardType: card.type,
+        cardColor: card.color,
+        cardHasImage: card.hasImage,
+        additionalSearchMatches: card.additionalSearchMatches,
+        editions: card.editions,
+        additionalMatchNumber: card.additionalMatchNumber,
+        exactMatch: card.exactMatch
     };
     return this.pageBuilder(source);
 };
