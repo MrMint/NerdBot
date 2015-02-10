@@ -10,17 +10,36 @@ function randomInt(low, high) {
 
 function processCard(foundCard, additionalCards, log) {
 
-    var additionalSearchMatches = _und.chain(additionalCards).without(foundCard).first(50).value();
-    var additionalMatchNumber = (additionalCards.length - 51);
+    var additionalSeachReultsToDisplay = 42;
+    var numberPerGroup = 14.0;
+
+    var additionalSearchMatches = _und.chain(additionalCards).without(foundCard).first(additionalSeachReultsToDisplay - 1).value();
+    var additionalMatchNumber = (additionalCards.length - additionalSeachReultsToDisplay);
     additionalMatchNumber = additionalMatchNumber > 0 ? additionalMatchNumber : undefined;
     var exactMatch = additionalSearchMatches.length == 0;
+
+    // break the additional editions up into smaller chunks for display purposes
+
+    var additionalSearchMatcheGroups = undefined;
+    if (!exactMatch) {
+        additionalSearchMatcheGroups = [];
+        var totalGroups = Math.ceil(additionalSeachReultsToDisplay / numberPerGroup);
+        for (var i = 0; i < totalGroups; i++) {
+            additionalSearchMatcheGroups.push(additionalSearchMatches.splice(0, numberPerGroup));
+        }
+        if (additionalMatchNumber) {
+            _und.last(additionalSearchMatcheGroups).push({
+                name: additionalMatchNumber + "more...",
+                store_url: undefined
+            });
+        }
+    }
+
     log.debug(foundCard);
 
     var cardEditions = _und.sortBy(foundCard.editions, function(edition) {
         return -edition.multiverse_id;
     });
-
-
 
     var mostRecentEdition = cardEditions.shift();
     var hasImage = mostRecentEdition.multiverse_id != 0;
@@ -29,26 +48,10 @@ function processCard(foundCard, additionalCards, log) {
         edition.hasImage = edition.multiverse_id != 0;
     });
 
-    // var j = 0, groupIndex = 0;
-    // var editionGroups = [[]];
-    // for(var i = 0; i < cardEditions.length; i++) {
-    //     if (j == 15 0) {
-    //         groupIndex++;
-    //         j = 0;
-    //         editionGroups.push([]);
-    //     }
-    //     cardEditions[i].hasImage = cardEditions[i].multiverse_id != 0;
-    //     editionGroups[groupIndex].push(cardEditions[i]);
-    // }
-    // _und.last(editionGroups).push({
-    //     name: additionalMatchNumber,
-    //     store_url: ""
-    // });
-
     return {
         hasImage: hasImage,
         exactMatch: exactMatch,
-        additionalSearchMatches: additionalSearchMatches,
+        additionalSearchMatches: additionalSearchMatcheGroups,
         additionalMatchNumber: additionalMatchNumber,
         additionalEditions: additionalEditions,
         mostRecentEdition: mostRecentEdition
@@ -119,6 +122,8 @@ CardService.prototype.getRandomCard = function(filter) {
             var randomNumber = randomInt(low, high);
             // Todo also bad, fix it
             var card = allCards[randomNumber];
+
+console.log("blah");
 
             var cardData = processCard(card, [], log);
 

@@ -1,39 +1,56 @@
-<table>
+<table border="2">
+ <tr>
+  <td>
+   {{#if cardHasImage}}
+   <a href="{{cardStoreLink}}"><img src="{{cardImageLink}}" height="300px"/></a>
+   {{else}}
+   <p><b>Name:</b> <a href="{{cardStoreLink}}">{{cardName}}</a>
+   <p><b>Type:</b> {{cardType}}
+   <p><b>Color:</b> {{cardColor}}
+   <p><b>Text:</b> {{cardText}}
+   {{/if}}
+  </td>
+  <td valign="top">
+   {{#if additionalSearchMatches}}
+   <p>Additional Search Matches:
+   <table>
     <tr>
-        <td>
-            {{#if cardHasImage}}
-                <a href="{{cardStoreLink}}"><img src="{{cardImageLink}}" height="300px"/></a>
-            {{else}}
-                <p><b>Name:</b> <a href="{{cardStoreLink}}">{{cardName}}</a>
-                <p><b>Type:</b> {{cardType}}
-                <p><b>Color:</b> {{cardColor}}
-                <p><b>Text:</b> {{cardText}}
-            {{/if}}
-        </td>
-        <td valign="top">
-            {{#if additionalSearchMatches}}
-                <p>Additional Search Matches:
-                <ul>
-                {{#each additionalSearchMatches}}
-                <li>
-                    <a href="{{store_url}}">{{name}}</a>
-                </li>
-                {{/each}}
-                {{#if additionalMatchNumber}}
-                <li>{{additionalMatchNumber}} more...</li>
-                {{/if}}
-                </ul>
-            {{/if}}
-            {{#if exactMatch}}
-                {{#each editions}}
-                    <!--{{set}}-->
-                    {{#if hasImage}}
-                    <span><a href="{{store_url}}"><img src="{{image_url}}" height="200px"/></a></span>
-                    {{else}}
-                    <!-- <span>NO IMAGE</span> -->
-                    {{/if}}
-                {{/each}}
-            {{/if}}
-        </td>
+    {{#each additionalSearchMatches}}
+     <td valign="top">
+      <ul>
+      {{#each this}}
+       <li>
+        {{#if store_url}}
+         <a href="{{store_url}}">{{name}}</a>
+        {{else}}
+         {{name}} 
+        {{/if}}
+       </li>
+      {{/each}}
+      </ul>
+     </td>
+    {{/each}}
     </tr>
+   </table>
+  {{/if}}
+  </td>
+ </tr>
+ <tr>
+    <td colspan="2">
+   {{#each editions}}
+    {{#if hasImage}}
+     <span><a href="{{store_url}}"><img src="{{image_url}}" height="100px"/></a></span>
+     {{#ifCond @index '==' 4}}
+     <br/>
+     {{/ifCond}}
+      {{#ifCond @index '==' 9}}
+     <br/>
+     {{/ifCond}}
+     {{#ifCond @index '==' 14}}
+     <br/>
+     {{/ifCond}}
+    {{/if}}
+   {{/each}}
+    </td>
+ </tr>
 </table>
