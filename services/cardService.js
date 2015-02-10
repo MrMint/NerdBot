@@ -8,6 +8,53 @@ function randomInt(low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 }
 
+function processCard(foundCard, additionalCards, log) {
+
+    var additionalSearchMatches = _und.chain(additionalCards).without(foundCard).first(50).value();
+    var additionalMatchNumber = (additionalCards.length - 51);
+    additionalMatchNumber = additionalMatchNumber > 0 ? additionalMatchNumber : undefined;
+    var exactMatch = additionalSearchMatches.length == 0;
+    log.debug(foundCard);
+
+    var cardEditions = _und.sortBy(foundCard.editions, function(edition) {
+        return -edition.multiverse_id;
+    });
+
+
+
+    var mostRecentEdition = cardEditions.shift();
+    var hasImage = mostRecentEdition.multiverse_id != 0;
+
+    var additionalEditions = _und.each(cardEditions, function(edition) {
+        edition.hasImage = edition.multiverse_id != 0;
+    });
+
+    // var j = 0, groupIndex = 0;
+    // var editionGroups = [[]];
+    // for(var i = 0; i < cardEditions.length; i++) {
+    //     if (j == 15 0) {
+    //         groupIndex++;
+    //         j = 0;
+    //         editionGroups.push([]);
+    //     }
+    //     cardEditions[i].hasImage = cardEditions[i].multiverse_id != 0;
+    //     editionGroups[groupIndex].push(cardEditions[i]);
+    // }
+    // _und.last(editionGroups).push({
+    //     name: additionalMatchNumber,
+    //     store_url: ""
+    // });
+
+    return {
+        hasImage: hasImage,
+        exactMatch: exactMatch,
+        additionalSearchMatches: additionalSearchMatches,
+        additionalMatchNumber: additionalMatchNumber,
+        additionalEditions: additionalEditions,
+        mostRecentEdition: mostRecentEdition
+    }
+}
+
 function CardService(apiUrl, log) {
     this.log = log;
     this.rest = client;
@@ -32,36 +79,22 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
                 card = cards[0];
             }
 
-            var additionalSearchMatches = _und.chain(cards).without(card).first(50).value();
-            var additionalMatchNumber = (cards.length - 51);
-            additionalMatchNumber = additionalMatchNumber > 0 ? additionalMatchNumber : undefined;
-            var exactMatch = additionalSearchMatches.length == 0;
-        	log.debug(card);
+            var cardData = processCard(card, cards, log);
 
-            var cardEditions = _und.sortBy(card.editions, function(edition) {
-                return -edition.multiverse_id;
-            });
-
-        	var setData = cardEditions.shift();
-            var hasImage = setData.multiverse_id != 0;
-
-            var additionalEditions = _und.each(cardEditions, function(edition) {
-                edition.hasImage = edition.multiverse_id != 0;
-            });
             return new CardModel(card.name,
                 card.types,
                 card.colors,
                 card.text,
-                setData['rarity'],
-                setData['set'],
-                setData['price']['average'],
-                setData['image_url'],
-                setData['store_url'],
-                hasImage,
-                additionalSearchMatches, 
-                additionalEditions,
-                additionalMatchNumber,
-                exactMatch);
+                cardData.mostRecentEdition['rarity'],
+                cardData.mostRecentEdition['set'],
+                cardData.mostRecentEdition['price']['average'],
+                cardData.mostRecentEdition['image_url'],
+                cardData.mostRecentEdition['store_url'],
+                cardData.hasImage,
+                cardData.additionalSearchMatches, 
+                cardData.additionalEditions,
+                cardData.additionalMatchNumber,
+                cardData.exactMatch);
         });
 };
 
@@ -85,18 +118,26 @@ CardService.prototype.getRandomCard = function(filter) {
             var high = allCards.length;
             var randomNumber = randomInt(low, high);
             // Todo also bad, fix it
-            var data = allCards[randomNumber];
-            log.debug(data);
-            var setData = data.editions[0];
-            return new CardModel(data.name,
-                data.type,
-                data.color,
-                data.text,
-                setData['rarity'],
-                setData['set'],
-                setData['price']['average'],
-                setData['image_url'],
-                setData['store_url']);
+            var card = allCards[randomNumber];
+
+            var cardData = processCard(card, [], log);
+
+            log.debug(card);
+
+            return new CardModel(card.name,
+                card.types,
+                card.colors,
+                card.text,
+                cardData.mostRecentEdition['rarity'],
+                cardData.mostRecentEdition['set'],
+                cardData.mostRecentEdition['price']['average'],
+                cardData.mostRecentEdition['image_url'],
+                cardData.mostRecentEdition['store_url'],
+                cardData.hasImage,
+                cardData.additionalSearchMatches, 
+                cardData.additionalEditions,
+                cardData.additionalMatchNumber,
+                cardData.exactMatch);
         });
 };
 
