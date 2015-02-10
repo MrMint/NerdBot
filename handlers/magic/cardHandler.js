@@ -28,6 +28,7 @@ CardHandler.prototype.handle = function * (request) {
         additionalMatchNumber: card.additionalMatchNumber,
         exactMatch: card.exactMatch
     };
+    console.log(this.pageBuilder(source));
     return this.pageBuilder(source);
 };
 

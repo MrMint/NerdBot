@@ -8,6 +8,56 @@ function randomInt(low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 }
 
+function processCard(foundCard, additionalCards, log) {
+
+    var additionalSeachReultsToDisplay = 42;
+    var numberPerGroup = 14.0;
+
+    var additionalSearchMatches = _und.chain(additionalCards).without(foundCard).first(additionalSeachReultsToDisplay - 1).value();
+    var additionalMatchNumber = (additionalCards.length - additionalSeachReultsToDisplay);
+    additionalMatchNumber = additionalMatchNumber > 0 ? additionalMatchNumber : undefined;
+    var exactMatch = additionalSearchMatches.length == 0;
+
+    // break the additional editions up into smaller chunks for display purposes
+
+    var additionalSearchMatcheGroups = undefined;
+    if (!exactMatch) {
+        additionalSearchMatcheGroups = [];
+        var totalGroups = Math.ceil(additionalSeachReultsToDisplay / numberPerGroup);
+        for (var i = 0; i < totalGroups; i++) {
+            additionalSearchMatcheGroups.push(additionalSearchMatches.splice(0, numberPerGroup));
+        }
+        if (additionalMatchNumber) {
+            _und.last(additionalSearchMatcheGroups).push({
+                name: additionalMatchNumber + "more...",
+                store_url: undefined
+            });
+        }
+    }
+
+    log.debug(foundCard);
+
+    var cardEditions = _und.sortBy(foundCard.editions, function(edition) {
+        return -edition.multiverse_id;
+    });
+
+    var mostRecentEdition = cardEditions.shift();
+    var hasImage = mostRecentEdition.multiverse_id != 0;
+
+    var additionalEditions = _und.each(cardEditions, function(edition) {
+        edition.hasImage = edition.multiverse_id != 0;
+    });
+
+    return {
+        hasImage: hasImage,
+        exactMatch: exactMatch,
+        additionalSearchMatches: additionalSearchMatcheGroups,
+        additionalMatchNumber: additionalMatchNumber,
+        additionalEditions: additionalEditions,
+        mostRecentEdition: mostRecentEdition
+    }
+}
+
 function CardService(apiUrl, log) {
     this.log = log;
     this.rest = client;
@@ -32,36 +82,22 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
                 card = cards[0];
             }
 
-            var additionalSearchMatches = _und.chain(cards).without(card).first(50).value();
-            var additionalMatchNumber = (cards.length - 51);
-            additionalMatchNumber = additionalMatchNumber > 0 ? additionalMatchNumber : undefined;
-            var exactMatch = additionalSearchMatches.length == 0;
-        	log.debug(card);
+            var cardData = processCard(card, cards, log);
 
-            var cardEditions = _und.sortBy(card.editions, function(edition) {
-                return -edition.multiverse_id;
-            });
-
-        	var setData = cardEditions.shift();
-            var hasImage = setData.multiverse_id != 0;
-
-            var additionalEditions = _und.each(cardEditions, function(edition) {
-                edition.hasImage = edition.multiverse_id != 0;
-            });
             return new CardModel(card.name,
                 card.types,
                 card.colors,
                 card.text,
-                setData['rarity'],
-                setData['set'],
-                setData['price']['average'],
-                setData['image_url'],
-                setData['store_url'],
-                hasImage,
-                additionalSearchMatches, 
-                additionalEditions,
-                additionalMatchNumber,
-                exactMatch);
+                cardData.mostRecentEdition['rarity'],
+                cardData.mostRecentEdition['set'],
+                cardData.mostRecentEdition['price']['average'],
+                cardData.mostRecentEdition['image_url'],
+                cardData.mostRecentEdition['store_url'],
+                cardData.hasImage,
+                cardData.additionalSearchMatches, 
+                cardData.additionalEditions,
+                cardData.additionalMatchNumber,
+                cardData.exactMatch);
         });
 };
 
@@ -85,18 +121,28 @@ CardService.prototype.getRandomCard = function(filter) {
             var high = allCards.length;
             var randomNumber = randomInt(low, high);
             // Todo also bad, fix it
-            var data = allCards[randomNumber];
-            log.debug(data);
-            var setData = data.editions[0];
-            return new CardModel(data.name,
-                data.type,
-                data.color,
-                data.text,
-                setData['rarity'],
-                setData['set'],
-                setData['price']['average'],
-                setData['image_url'],
-                setData['store_url']);
+            var card = allCards[randomNumber];
+
+console.log("blah");
+
+            var cardData = processCard(card, [], log);
+
+            log.debug(card);
+
+            return new CardModel(card.name,
+                card.types,
+                card.colors,
+                card.text,
+                cardData.mostRecentEdition['rarity'],
+                cardData.mostRecentEdition['set'],
+                cardData.mostRecentEdition['price']['average'],
+                cardData.mostRecentEdition['image_url'],
+                cardData.mostRecentEdition['store_url'],
+                cardData.hasImage,
+                cardData.additionalSearchMatches, 
+                cardData.additionalEditions,
+                cardData.additionalMatchNumber,
+                cardData.exactMatch);
         });
 };
 

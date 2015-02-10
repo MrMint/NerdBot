@@ -11,7 +11,6 @@ function RandomHandler(cardService, log) {
 
 RandomHandler.prototype.handle = function * (request) {
     this.log.debug(request);
-    console.log("random" + request);
 
     var words = request.split(' ');
 
@@ -19,7 +18,16 @@ RandomHandler.prototype.handle = function * (request) {
 
     var source = {
         cardImageLink: card.imgUrl,
-        cardStoreLink: card.storeUrl
+        cardStoreLink: card.storeUrl,
+        cardName: card.name,
+        cardText: card.text,
+        cardType: card.type,
+        cardColor: card.color,
+        cardHasImage: card.hasImage,
+        additionalSearchMatches: card.additionalSearchMatches,
+        editions: card.editions,
+        additionalMatchNumber: card.additionalMatchNumber,
+        exactMatch: card.exactMatch
     };
     return this.pageBuilder(source);
 };
