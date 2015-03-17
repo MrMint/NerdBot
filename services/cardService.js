@@ -137,7 +137,7 @@ console.log("blah");
                 cardData.mostRecentEdition['rarity'],
                 cardData.mostRecentEdition['set'],
                 cardData.mostRecentEdition['price']['average'],
-                cardData.mostRecentEdition['image_url'],
+                'http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=' + cardData.mostRecentEdition['multiverse_id'] + '&type=card',
                 cardData.mostRecentEdition['store_url'],
                 cardData.hasImage,
                 cardData.additionalSearchMatches, 
