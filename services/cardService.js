@@ -46,6 +46,7 @@ function processCard(foundCard, additionalCards, log) {
 
     var additionalEditions = _und.each(cardEditions, function(edition) {
         edition.hasImage = edition.multiverse_id != 0;
+        edition.image_url = 'http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=' + edition.multiverse_id + '&type=card';
     });
 
     return {
