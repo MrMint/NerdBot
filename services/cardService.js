@@ -42,12 +42,14 @@ function processCard(foundCard, additionalCards, log) {
     });
 
     var mostRecentEdition = cardEditions.shift();
-    var hasImage = mostRecentEdition.multiverse_id != 0;
 
-    var additionalEditions = _und.each(cardEditions, function(edition) {
-        edition.hasImage = edition.multiverse_id != 0;
-        edition.image_url = 'http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=' + edition.multiverse_id + '&type=card';
-    });
+    var hasImage = false;
+
+    // var additionalEditions = _und.each(cardEditions, function(edition) {
+    //     edition.hasImage = edition.multiverse_id != 0;
+    //     edition.image_url = 'http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=' + edition.multiverse_id + '&type=card';
+    // });
+    additionalEditions = []; // Remove additional editions for the time being
 
     return {
         hasImage: hasImage,
@@ -59,10 +61,23 @@ function processCard(foundCard, additionalCards, log) {
     }
 }
 
-function CardService(apiUrl, log) {
+function CardService(apiUrl, imageApiUrl, log) {
     this.log = log;
     this.rest = client;
     this.apiUrl = apiUrl;
+    this.imageApiUrl = imageApiUrl
+}
+
+CardService.prototype.getCardImageUrlAsync = function(cardName) {
+    return this.rest(this.imageApiUrl + '?card=' + encodeURIComponent(cardName))
+        .then(function(response) {
+            var imageUrl = null;
+            if (response.entity && response.entity.render) {
+                var renderText = response.entity.render;
+                imageUrl = /data-card-img=\"(.*?)\"/g.exec(renderText)[1]
+            }
+            return imageUrl;
+        });
 }
 
 CardService.prototype.getCardByNameAsync = function(cardName) {
@@ -72,6 +87,10 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
         .then(function(response) {
         	// Todo also bad, fix it
         	var cards = response.entity;
+
+            if (cards.length == 0) {
+                return new CardModel(cardName);
+            }
 
             // try to find exact match
             var card = _und.find(cards, function(icard) {
@@ -92,7 +111,7 @@ CardService.prototype.getCardByNameAsync = function(cardName) {
                 cardData.mostRecentEdition['rarity'],
                 cardData.mostRecentEdition['set'],
                 cardData.mostRecentEdition['price']['average'],
-                'http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=' + cardData.mostRecentEdition['multiverse_id'] + '&type=card',
+                cardData.imageUrl,
                 cardData.mostRecentEdition['store_url'],
                 cardData.hasImage,
                 cardData.additionalSearchMatches, 
@@ -124,7 +143,6 @@ CardService.prototype.getRandomCard = function(filter) {
             // Todo also bad, fix it
             var card = allCards[randomNumber];
 
-console.log("blah");
 
             var cardData = processCard(card, [], log);
 
@@ -137,7 +155,7 @@ console.log("blah");
                 cardData.mostRecentEdition['rarity'],
                 cardData.mostRecentEdition['set'],
                 cardData.mostRecentEdition['price']['average'],
-                'http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=' + cardData.mostRecentEdition['multiverse_id'] + '&type=card',
+                cardData.imageUrl,
                 cardData.mostRecentEdition['store_url'],
                 cardData.hasImage,
                 cardData.additionalSearchMatches, 

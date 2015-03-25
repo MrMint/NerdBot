@@ -35,8 +35,8 @@ log.info("Registering the handlers.");
 
 // Register the handlers
 var magicHandlers = new HandlerService(log);
-magicHandlers.add(new CardHandler(new CardService('https://api.deckbrew.com/mtg/', log), log));
-magicHandlers.add(new RandomHandler(new CardService('https://api.deckbrew.com/mtg/', log), log));
+magicHandlers.add(new CardHandler(new CardService('https://api.deckbrew.com/mtg/', 'http://tappedout.net/api/v1/render_card/', log), log));
+magicHandlers.add(new RandomHandler(new CardService('https://api.deckbrew.com/mtg/', 'http://tappedout.net/api/v1/render_card/', log), log));
 magicHandlers.add(new HelpHandler(magicHandlers, log));
 
 // Setup the key used by hipchat

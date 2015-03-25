@@ -1,14 +1,18 @@
 <table border="2">
  <tr>
   <td>
-   {{#if cardHasImage}}
-   <a href="{{cardStoreLink}}"><img src="{{cardImageLink}}" height="300px"/></a>
-   {{else}}
-   <p><b>Name:</b> <a href="{{cardStoreLink}}">{{cardName}}</a>
-   <p><b>Type:</b> {{cardType}}
-   <p><b>Color:</b> {{cardColor}}
-   <p><b>Text:</b> {{cardText}}
-   {{/if}}
+    {{#if cardNotFound}}
+    No dice, can't find a "{{cardName}}" card anywhere!
+    {{else}}
+       {{#if cardHasImage}}
+       <a href="{{cardStoreLink}}"><img src="{{cardImageLink}}" height="300px"/></a>
+       {{else}}
+       <p><b>Name:</b> <a href="{{cardStoreLink}}">{{cardName}}</a>
+       <p><b>Type:</b> {{cardType}}
+       <p><b>Color:</b> {{cardColor}}
+       <p><b>Text:</b> {{cardText}}
+       {{/if}}
+    {{/if}}
   </td>
   <td valign="top">
    {{#if additionalSearchMatches}}
