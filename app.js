@@ -37,9 +37,9 @@ log.info("Registering the handlers.");
 
 // Register the handlers
 var magicHandlers = new HandlerService(log);
-magicHandlers.add(new CardHandler(new CardService('https://api.deckbrew.com/mtg/', 'http://tappedout.net/api/v1/render_card/', log), log));
-magicHandlers.add(new RandomHandler(new CardService('https://api.deckbrew.com/mtg/', 'http://tappedout.net/api/v1/render_card/', log), log));
-magicHandlers.add(new HelpHandler(magicHandlers, log));
+magicHandlers.add(new MagicCardHandler(new MagicCardService('https://api.deckbrew.com/mtg/', 'http://tappedout.net/api/v1/render_card/', log), log));
+magicHandlers.add(new MagicRandomHandler(new MagicCardService('https://api.deckbrew.com/mtg/', 'http://tappedout.net/api/v1/render_card/', log), log));
+magicHandlers.add(new MagicHelpHandler(magicHandlers, log));
 
 var hearthstoneHandlers = new HandlerService(log);
 hearthstoneHandlers.add(new HearthstoneCardHandler(new HearthstoneCardService('https://omgvamp-hearthstone-v1.p.mashape.com/cards', log), log));
