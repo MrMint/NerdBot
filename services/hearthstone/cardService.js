@@ -1,8 +1,10 @@
+var _und = require('underscore');
 var rest = require('rest');
 var mime = require('rest/interceptor/mime');
-var CardModel = require('../models/magic/cardModel.js');
-var client = rest.wrap(mime,{ headers: {"X-Mashape-Key", "apikey"});
-var apikey = require('./package').hearthstoneApiKey;
+var defaultRequest = require('rest/interceptor/defaultRequest');
+var CardModel = require('../../models/hearthstone/cardModel.js');
+var apikey = require('../../package').production.hearthstoneApiKey;
+var client = rest.wrap(mime).wrap(defaultRequest, { headers: {"X-Mashape-Key": process.env[apikey]}});
 
 function CardService(apiUrl, log) {
     this.log = log;
@@ -12,12 +14,12 @@ function CardService(apiUrl, log) {
 
 CardService.prototype.getCardByNameAsync = function(cardName) {
 	var log = this.log;
-	this.log.debug('Making request for card with name: ' + cardName);
+	log.debug('Making request for card with name: ' + cardName);
     return this.rest(this.apiUrl + '/' + cardName)
         .then(function(response) {
         	// Todo also bad, fix it
         	var cards = response.entity;
-
+            log.info(cards);
             // try to find exact match
             var card = _und.find(cards, function(icard) {
                 return icard.name.trim().toLowerCase() == cardName.trim().toLowerCase();
@@ -86,14 +88,12 @@ function processCard(foundCard, additionalCards, log) {
         }
     }
 
-    log.debug(foundCard);
-
-    var hasImage = card.img != undefined && card.img.length != 0;
+    var hasImage = foundCard.img != undefined && foundCard.img.length != 0;
 
     return {
         hasImage: hasImage,
         exactMatch: exactMatch,
-        additionalSearchMatches: additionalSearchMatcheGroups,
+        additionalSearchMatches: additionalSearchMatches,
         additionalMatchNumber: additionalMatchNumber,
     }
 }

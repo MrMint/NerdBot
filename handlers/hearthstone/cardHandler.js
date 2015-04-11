@@ -17,7 +17,9 @@ CardHandler.prototype.handle = function * (request) {
 
     var source = {
         cardImageLink: card.img,
-        cardHasImage: card.hasImage,
+        cardGoldImageLink: card.imgGold,
+        cardHasImage: card.img != undefined && card.img.length != 0,
+        cardHasGoldImage: card.imgGold != undefined && card.imgGold.length != 0,
         additionalSearchMatches: card.additionalSearchMatches,
         exactMatch: card.exactMatch
     };

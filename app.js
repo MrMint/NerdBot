@@ -72,6 +72,16 @@ addon.webhook('room_message', /^\/magic /, function * () {
 
 });
 
+addon.webhook('room_message', /^\/hearth /, function * () {
+    try{
+        yield this.roomClient.sendNotification(yield hearthstoneHandlers.handle(this.content));
+    }catch (e){
+        var errorHandler = new ErrorHandler();
+        yield this.roomClient.sendNotification(yield errorHandler.handle(this.sender.name));
+    }
+
+});
+
 log.info("Starting the koa app.");
 
 app.listen();
