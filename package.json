@@ -22,6 +22,7 @@
         "localBaseUrl": "https://mint-nerdbot.herokuapp.com",
         "redisEnv": "REDISCLOUD_URL",
         "mongoEnv": "MONGOLAB_URI",
+        "hearthstoneApiKey": "HEARTHSTONE_API_KEY",
         "port": "$PORT"
     },
     "dependencies": {

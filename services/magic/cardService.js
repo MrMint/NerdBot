@@ -1,9 +1,15 @@
 var rest = require('rest');
 var _und = require('underscore');
 var mime = require('rest/interceptor/mime');
-var CardModel = require('../models/magic/cardModel.js');
+var CardModel = require('../../models/magic/cardModel.js');
 var client = rest.wrap(mime);
 
+function CardService(apiUrl, imageApiUrl, log) {
+    this.log = log;
+    this.rest = client;
+    this.apiUrl = apiUrl;
+    this.imageApiUrl = imageApiUrl
+}
 function randomInt(low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 }
@@ -59,13 +65,6 @@ function processCard(foundCard, additionalCards, log) {
         additionalEditions: additionalEditions,
         mostRecentEdition: mostRecentEdition
     }
-}
-
-function CardService(apiUrl, imageApiUrl, log) {
-    this.log = log;
-    this.rest = client;
-    this.apiUrl = apiUrl;
-    this.imageApiUrl = imageApiUrl
 }
 
 CardService.prototype.getCardImageUrlAsync = function(cardName) {
