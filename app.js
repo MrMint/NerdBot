@@ -14,8 +14,6 @@ var MagicCardHandler = require('./handlers/magic/cardHandler.js');
 var MagicRandomHandler = require('./handlers/magic/randomHandler.js');
 var MagicHelpHandler = require('./handlers/magic/helpHandler.js');
 var HearthstoneCardHandler = require('./handlers/hearthstone/cardHandler.js');
-// var HearthstoneRandomHandler = require('./handlers/hearthstone/randomHandler.js');
-// var HearthstoneHelpHandler = require('./handlers/hearthstone/helpHandler.js');
 var ErrorHandler = require('./handlers/errorHandler.js');
 
 // Handlebars
