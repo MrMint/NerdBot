@@ -1,0 +1,38 @@
+<table border="2">
+ <tr>
+ {{#if cardHasImage}}
+  <td>
+  <img src="{{cardImageLink}}" height="300px" />
+  </td>
+  {{/if}}
+  {{#if cardHasGoldImage}}
+    <td>
+   <img src="{{cardGoldImageLink}}" height="300px" />
+  </td>
+  {{/if}}
+  <td valign="top">
+   {{#if additionalSearchMatches}}
+   <p>Additional Search Matches:
+   <table>
+    <tr>
+    {{#each additionalSearchMatches}}
+     <td valign="top">
+      <ul>
+      {{#each this}}
+       <li>
+        {{#if store_url}}
+         <a href="{{cardImageLink}}">{{name}}</a>
+        {{else}}
+         {{name}} 
+        {{/if}}
+       </li>
+      {{/each}}
+      </ul>
+     </td>
+    {{/each}}
+    </tr>
+   </table>
+  {{/if}}
+  </td>
+</tr>
+</table>

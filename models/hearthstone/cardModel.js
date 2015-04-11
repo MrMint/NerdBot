@@ -1,0 +1,31 @@
+function CardModel(cardId,name,cardSet,type,faction,rarity,cost,attack,health,durability,text,inPlayText,flavor,artist,collectible,elite,race,playerClass,howToGet,howToGetGold,img,imgGold,locale,mechanics,additionalSearchMatches,additionalMatchNumber,exactMatch) {
+    this.cardId = cardId;
+    this.name = name;
+    this.cardSet = cardSet;
+    this.type = type;
+    this.faction = faction;
+    this.rarity = rarity;
+    this.cost = cost;
+    this.attack = attack;
+    this.health = health;
+    this.durability = durability;
+    this.text = text;
+    this.inPlayText = inPlayText;
+    this.flavor = flavor;
+    this.artist = artist;
+    this.collectible = collectible;
+    this.elite = elite;
+    this.race = race;
+    this.playerClass = playerClass;
+    this.howToGet = howToGet;
+    this.howToGetGold = howToGetGold;
+    this.img = img;
+    this.imgGold = imgGold;
+    this.locale = locale;
+    this.mechanics = mechanics;
+    this.additionalSearchMatches = additionalSearchMatches;
+    this.additionalMatchNumber = additionalMatchNumber;
+    this.exactMatch = exactMatch;
+}
+
+module.exports = CardModel;

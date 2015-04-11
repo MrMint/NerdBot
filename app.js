@@ -6,12 +6,14 @@ var app = ack(pkg);
 // Nerd Bot dependencies
 var bunyan = require('bunyan');
 var HandlerService = require('./services/handlerService.js');
-var CardService = require('./services/cardService.js');
+var MagicCardService = require('./services/magic/cardService.js');
+var HearthstoneCardService = require('./services/hearthstone/cardService.js');
 
 // Handlers
-var CardHandler = require('./handlers/magic/cardHandler.js');
-var RandomHandler = require('./handlers/magic/randomHandler.js');
-var HelpHandler = require('./handlers/magic/helpHandler.js');
+var MagicCardHandler = require('./handlers/magic/cardHandler.js');
+var MagicRandomHandler = require('./handlers/magic/randomHandler.js');
+var MagicHelpHandler = require('./handlers/magic/helpHandler.js');
+var HearthstoneCardHandler = require('./handlers/hearthstone/cardHandler.js');
 var ErrorHandler = require('./handlers/errorHandler.js');
 
 // Handlebars
@@ -35,9 +37,12 @@ log.info("Registering the handlers.");
 
 // Register the handlers
 var magicHandlers = new HandlerService(log);
-magicHandlers.add(new CardHandler(new CardService('https://api.deckbrew.com/mtg/', 'http://tappedout.net/api/v1/render_card/', log), log));
-magicHandlers.add(new RandomHandler(new CardService('https://api.deckbrew.com/mtg/', 'http://tappedout.net/api/v1/render_card/', log), log));
-magicHandlers.add(new HelpHandler(magicHandlers, log));
+magicHandlers.add(new MagicCardHandler(new MagicCardService('https://api.deckbrew.com/mtg/', 'http://tappedout.net/api/v1/render_card/', log), log));
+magicHandlers.add(new MagicRandomHandler(new MagicCardService('https://api.deckbrew.com/mtg/', 'http://tappedout.net/api/v1/render_card/', log), log));
+magicHandlers.add(new MagicHelpHandler(magicHandlers, log));
+
+var hearthstoneHandlers = new HandlerService(log);
+hearthstoneHandlers.add(new HearthstoneCardHandler(new HearthstoneCardService('https://omgvamp-hearthstone-v1.p.mashape.com/cards', log), log));
 
 // Setup the key used by hipchat
 if (process.env.NERDBOT_KEY) {
@@ -58,6 +63,16 @@ addon.onWebhook('uninstall', function * () {
 addon.webhook('room_message', /^\/magic /, function * () {
     try{
         yield this.roomClient.sendNotification(yield magicHandlers.handle(this.content));
+    }catch (e){
+        var errorHandler = new ErrorHandler();
+        yield this.roomClient.sendNotification(yield errorHandler.handle(this.sender.name));
+    }
+
+});
+
+addon.webhook('room_message', /^\/hearth /, function * () {
+    try{
+        yield this.roomClient.sendNotification(yield hearthstoneHandlers.handle(this.content));
     }catch (e){
         var errorHandler = new ErrorHandler();
         yield this.roomClient.sendNotification(yield errorHandler.handle(this.sender.name));

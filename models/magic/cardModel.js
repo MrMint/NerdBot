@@ -11,7 +11,7 @@ function CardModel(name, type, color, text, rarity, set, avgPrice, imgUrl, store
     this.hasImage = hasImage;
     this.additionalSearchMatches = additionalSearchMatches;
     this.editions = editions;
-    this.additionalMatchNumber = additionalMatchNumber
+    this.additionalMatchNumber = additionalMatchNumber;
     this.exactMatch = exactMatch;
     this.notFound = notFound;
 }

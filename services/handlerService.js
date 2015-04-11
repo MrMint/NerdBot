@@ -36,8 +36,8 @@ HandlerService.prototype.handle = function * (request) {
         }
     } catch (e) {
         // Bad things are happening
+        this.log.error(e);
         throw "CommandHandleException"
-        log.error(e);
     }
 };
 
