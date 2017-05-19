@@ -16,10 +16,9 @@ CardHandler.prototype.handle = function * (request) {
 
 
     var card = yield this.cardService.getCardByNameAsync(request.substring(words[0].length + words[1].length + 2));
-    var cardImageUrl = yield this.cardService.getCardImageUrlAsync(card.name);
+    var cardImageUrl = card.imgUrl
     if (cardImageUrl) {
         card.hasImage = true;
-        card.imgUrl = cardImageUrl;
         card.notFound = false;
     }
     else if (!card.text) {

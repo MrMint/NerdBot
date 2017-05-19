@@ -17,15 +17,15 @@ Nerd Bot
 - Bunyan.js
 - Vagrant
 
-##Want to contribute?
+## Want to contribute?
 Fork the repo and create pull requests!
 
-##To get started developing
+## To get started developing
 
 1. Fork/Clone repo
 2. Follow directions [here](https://bitbucket.org/atlassianlabs/ac-koa-hipchat) or [here](https://www.hipchat.com/docs/apiv2/quick_start)
 
-###Tips
+### Tips
 
   * If you don't go the Vagrant route, you'll need to run your own redis server: [http://redis.io/](http://redis.io/])
     * Follow the download/compile directions, then run it with ./redis-server from the src directory
