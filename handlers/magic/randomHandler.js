@@ -15,10 +15,9 @@ RandomHandler.prototype.handle = function * (request) {
     var words = request.split(' ');
 
     var card = yield this.cardService.getRandomCard(words[2] || "");
-    var cardImageUrl = yield this.cardService.getCardImageUrlAsync(card.name);
+    var cardImageUrl = card.imgUrl
     if (cardImageUrl) {
         card.hasImage = true;
-        card.imgUrl = cardImageUrl;
         card.notFound = false;
     }
     else if (!card.text) {
